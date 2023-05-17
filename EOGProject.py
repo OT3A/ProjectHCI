@@ -162,126 +162,128 @@ def FeatureExtracion(siganls, method):
        for signal in siganls:
            Feature.append(FeatureExtracionByArea(signal))
     return Feature
-
-labels_H =[]
-labels_V =[]
-signals_H = []
-signals_V =[]
-feature_H =[]
-feature_V =[]
-
-files = os.listdir("D:/PDF/4th year/seconde term/HCI/ProjectHCI/dataset")
-# print(files)
-for file in files:
-    if 'h' in file:
-        v = file.replace('h', 'v')
-        if v not in files:
-            continue
-    elif 'v' in file:
-        h = file.replace('v', 'h')
-        if h not in files:
-            continue
-    signal = ReadSignal("dataset/"+file)
-    signal = PreprocessingEOGSignal(signal)
-    label = -1
-    if file.startswith('asagi'):    
-        label = 0
-        if file.endswith('v.txt'):
-            signals_V.append(signal)
-            labels_V.append(label)
-        else:
-            signals_H.append(signal)
-            labels_H.append(label)
-    elif file.startswith('kirp'):
-        label = 1
-        if file.endswith('v.txt'):
-            signals_V.append(signal)
-            labels_V.append(label)
-        else:
-            signals_H.append(signal)
-            labels_H.append(label)
-    elif file.startswith('sag'):
-        label = 2
-        if file.endswith('v.txt'):
-            signals_V.append(signal)
-            labels_V.append(label)
-        else:
-            signals_H.append(signal)
-            labels_H.append(label)
-    elif file.startswith('sol'):
-        label = 3
-        if file.endswith('v.txt'):
-            signals_V.append(signal)
-            labels_V.append(label)
-        else:
-            signals_H.append(signal)
-            labels_H.append(label)
-    elif file.startswith('yukari'):
-        label = 4
-        if file.endswith('v.txt'):
-            signals_V.append(signal)
-            labels_V.append(label)
-        else:
-            signals_H.append(signal)
-            labels_H.append(label)
-# print(signals_H,len(signals_H))
-feature_H = FeatureExtracion(signals_H, 5)
-feature_V = FeatureExtracion(signals_V, 5)
-data_H =pd.DataFrame(feature_H)
-
-data_V =pd.DataFrame(feature_V)
-
-
-data = pd.concat([data_H, data_V], axis=1)
-
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(data, labels_H, test_size=0.2,)
-
-# Train an SVM classifier
-clf = SVC(kernel='linear', C=1.0)
-clf.fit(X_train, y_train)
-
-# Predict the labels for the test set
-y_pred = clf.predict(X_test)
-
-# Evaluate the accuracy of the classifier
-accuracy = accuracy_score(y_test, y_pred)
-if accuracy >= .95:
-    dump(clf, f'modelSVM{accuracy*100}Area.svm')
-
-print("Accuracy SVM:", accuracy)
-
-#  Train the KNN model
-k = 5 # Number of nearest neighbors to consider
-knn_model = neighbors.KNeighborsClassifier(n_neighbors=k)
-knn_model.fit(X_train, y_train)
-
-#  Test the KNN model
-predictions = knn_model.predict(X_test)
-accuracy = accuracy_score(y_test, predictions)
-
-if accuracy >= .95:
-    dump(knn_model, f'modelKNN{accuracy*100}Area.knn')
-
-print("Accuracy KNN:", accuracy)
-
-
-#  Train the Random Forest model
-n_trees = 100 # Number of trees in the forest
-max_depth = None # Maximum depth of the decision trees
-random_forest_model = RandomForestClassifier(n_estimators=n_trees, max_depth=max_depth)
-random_forest_model.fit(X_train, y_train)
-
-#  Test the Random Forest model
-predictions = random_forest_model.predict(X_test)
-accuracy = accuracy_score(y_test, predictions)
-
-if accuracy >= .95:
-    dump(knn_model, f'modelRF{accuracy*100}Area.rf')
-
-print("Accuracy RF:", accuracy)
-
-predictions = knn_model.predict(X_test)
-print(predictions , y_test)
-
+def main():
+    labels_H =[]
+    labels_V =[]
+    signals_H = []
+    signals_V =[]
+    feature_H =[]
+    feature_V =[]
+    
+    files = os.listdir("D:/PDF/4th year/seconde term/HCI/ProjectHCI/dataset")
+    # print(files)
+    for file in files:
+        if 'h' in file:
+            v = file.replace('h', 'v')
+            if v not in files:
+                continue
+        elif 'v' in file:
+            h = file.replace('v', 'h')
+            if h not in files:
+                continue
+        signal = ReadSignal("dataset/"+file)
+        signal = PreprocessingEOGSignal(signal)
+        label = -1
+        if file.startswith('asagi'):    
+            label = 0
+            if file.endswith('v.txt'):
+                signals_V.append(signal)
+                labels_V.append(label)
+            else:
+                signals_H.append(signal)
+                labels_H.append(label)
+        elif file.startswith('kirp'):
+            label = 1
+            if file.endswith('v.txt'):
+                signals_V.append(signal)
+                labels_V.append(label)
+            else:
+                signals_H.append(signal)
+                labels_H.append(label)
+        elif file.startswith('sag'):
+            label = 2
+            if file.endswith('v.txt'):
+                signals_V.append(signal)
+                labels_V.append(label)
+            else:
+                signals_H.append(signal)
+                labels_H.append(label)
+        elif file.startswith('sol'):
+            label = 3
+            if file.endswith('v.txt'):
+                signals_V.append(signal)
+                labels_V.append(label)
+            else:
+                signals_H.append(signal)
+                labels_H.append(label)
+        elif file.startswith('yukari'):
+            label = 4
+            if file.endswith('v.txt'):
+                signals_V.append(signal)
+                labels_V.append(label)
+            else:
+                signals_H.append(signal)
+                labels_H.append(label)
+    # print(signals_H,len(signals_H))
+    feature_H = FeatureExtracion(signals_H, 5)
+    feature_V = FeatureExtracion(signals_V, 5)
+    data_H =pd.DataFrame(feature_H)
+    
+    data_V =pd.DataFrame(feature_V)
+    
+    
+    data = pd.concat([data_H, data_V], axis=1)
+    
+    
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(data, labels_H, test_size=0.2,)
+    
+    # Train an SVM classifier
+    clf = SVC(kernel='linear', C=1.0)
+    clf.fit(X_train, y_train)
+    
+    # Predict the labels for the test set
+    y_pred = clf.predict(X_test)
+    
+    # Evaluate the accuracy of the classifier
+    accuracy = accuracy_score(y_test, y_pred)
+    if accuracy >= .95:
+        dump(clf, f'modelSVM{accuracy*100}Area.svm')
+    
+    print("Accuracy SVM:", accuracy)
+    
+    #  Train the KNN model
+    k = 5 # Number of nearest neighbors to consider
+    knn_model = neighbors.KNeighborsClassifier(n_neighbors=k)
+    knn_model.fit(X_train, y_train)
+    
+    #  Test the KNN model
+    predictions = knn_model.predict(X_test)
+    accuracy = accuracy_score(y_test, predictions)
+    
+    if accuracy >= .95:
+        dump(knn_model, f'modelKNN{accuracy*100}Area.knn')
+    
+    print("Accuracy KNN:", accuracy)
+    
+    
+    #  Train the Random Forest model
+    n_trees = 100 # Number of trees in the forest
+    max_depth = None # Maximum depth of the decision trees
+    random_forest_model = RandomForestClassifier(n_estimators=n_trees, max_depth=max_depth)
+    random_forest_model.fit(X_train, y_train)
+    
+    #  Test the Random Forest model
+    predictions = random_forest_model.predict(X_test)
+    accuracy = accuracy_score(y_test, predictions)
+    
+    if accuracy >= .95:
+        dump(knn_model, f'modelRF{accuracy*100}Area.rf')
+    
+    print("Accuracy RF:", accuracy)
+    
+    predictions = knn_model.predict(X_test)
+    print(predictions , y_test)
+    
+if __name__ == '__main__':
+    main()
