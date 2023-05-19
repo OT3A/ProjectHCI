@@ -1,20 +1,13 @@
 import tkinter as tk
 import pygame
 import math
-import random
-import tkinter as tk
-
 from tkinter import filedialog
-
 from EOGProject import PreprocessingEOGSignal,ReadSignal,FeatureExtracionByPeaks
-
 from joblib import load
-
 import pyaudio
-
 import wave
 
-model = load('D:/PDF/4th year/seconde term/HCI/ProjectHCI/modelKNN100.0Peaks.knn')
+model = load('./modelKNN100.0Peaks.knn')
 
 class Player:
     CHUNK = 1024
@@ -105,9 +98,6 @@ player4 = Player('output5.wav')
 pygame.init()
 
 
-
-
-
 # set the dimensions of the screen
 size = width, height = 150, 50
 screen = pygame.display.set_mode(size)
@@ -162,6 +152,9 @@ def move_pupils(predictMove):
     # blink when space bar is pressed
     if predictMove == 1:
         global blink_timer, left_eye_open, right_eye_open
+        left_pupil_pos = get_new_pos(left_eye_pos, 0, 1000)
+        right_pupil_pos = get_new_pos(right_eye_pos, 0, 1000)
+        moved_timer = moved_duration
         if blink_timer == 0:
             blink_timer = blink_duration
             left_eye_open = False
