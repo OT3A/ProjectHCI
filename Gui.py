@@ -63,6 +63,7 @@ down = False
 left = False
 right = False
 blink = False
+golbal = ''
 def select_file():
     pathSignalH = filedialog.askopenfilename()
     pathSignalV = filedialog.askopenfilename()
@@ -90,6 +91,9 @@ def select_file():
         print('Up')
         
     print("predict",prediction)
+    update_canvas(prediction)
+
+    
 
 
 player = Player('hun.wav')
@@ -105,7 +109,7 @@ pygame.init()
 
 
 # set the dimensions of the screen
-size = width, height = 900, 600
+size = width, height = 150, 50
 screen = pygame.display.set_mode(size)
 
 # set the colors for the eyes and pupils
@@ -134,30 +138,29 @@ moved_duration = 200
 
 
 
-
 # define a function to move the pupils based on keyboard input
-def move_pupils():
+def move_pupils(predictMove):
     global left_pupil_pos, right_pupil_pos, moved_timer
     keys = pygame.key.get_pressed()
     # move pupils based on arrow keys
-    if keys[pygame.K_UP]:
+    if predictMove == 4:
         left_pupil_pos = get_new_pos(left_eye_pos, math.pi/2, eye_radius - pupil_radius)
         right_pupil_pos = get_new_pos(right_eye_pos, math.pi/2, eye_radius - pupil_radius)
         moved_timer = moved_duration
-    elif keys[pygame.K_DOWN]:
+    elif predictMove == 0:
         left_pupil_pos = get_new_pos(left_eye_pos, -math.pi/2, eye_radius - pupil_radius)
         right_pupil_pos = get_new_pos(right_eye_pos, -math.pi/2, eye_radius - pupil_radius)
         moved_timer = moved_duration
-    elif keys[pygame.K_LEFT]:
+    elif predictMove == 3:
         left_pupil_pos = get_new_pos(left_eye_pos, math.pi, eye_radius - pupil_radius)
         right_pupil_pos = get_new_pos(right_eye_pos, math.pi, eye_radius - pupil_radius)
         moved_timer = moved_duration
-    elif keys[pygame.K_RIGHT]:
+    elif predictMove == 2:
         left_pupil_pos = get_new_pos(left_eye_pos, 0, eye_radius - pupil_radius)
         right_pupil_pos = get_new_pos(right_eye_pos, 0, eye_radius - pupil_radius)
         moved_timer = moved_duration
     # blink when space bar is pressed
-    if keys[pygame.K_SPACE]:
+    if predictMove == 1:
         global blink_timer, left_eye_open, right_eye_open
         if blink_timer == 0:
             blink_timer = blink_duration
@@ -207,14 +210,16 @@ bathroomButton.place(relx=0.9,rely=0.5,anchor='center')
 bathroomButton.bind('<Enter>', button_entered)
 bathroomButton.bind('<Leave>', button_left)
 
-loadSignalButton = tk.Button(root,text="Load Signal",command=select_file)
+loadSignalButton = tk.Button(root,text="Load Signal",command = select_file)
 loadSignalButton.place(relx=0.1,rely=0.9,anchor='center')
+
+
 # define a function to update the canvas with the current state of the eyes
-def update_canvas():
+def update_canvas(predictMove):
     global blink_timer, left_eye_open, right_eye_open, left_pupil_pos, right_pupil_pos, moved_timer
     
     # move the pupils based on keyboard input and blink when space bar is pressed
-    move_pupils()
+    move_pupils(predictMove)
 
     # decrement blink timer and update eye state
     if blink_timer > 0:
@@ -251,7 +256,6 @@ def update_canvas():
     # update the display
     canvas.after(10, update_canvas)
 # start the Tkinter main loop
-update_canvas()
 root.mainloop()
 
 # quit Pygame
