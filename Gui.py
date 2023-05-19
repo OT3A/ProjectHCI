@@ -95,7 +95,7 @@ pygame.init()
 
 
 # set the dimensions of the screen
-size = width, height = 900, 600
+size = width, height = 200, 100
 screen = pygame.display.set_mode(size)
 
 # set the colors for the eyes and pupils
