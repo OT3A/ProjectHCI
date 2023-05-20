@@ -27,9 +27,9 @@ def ReadSignal(path):
         L=lines[i+1]
         AMP.append(int(L))
     return AMP
-def DrawSignal(signal):
+def DrawSignal(signal1):
     plt.Figure(figsize=(12,6))
-    plt.plot(np.arange(0,len(signal)), signal)
+    plt.plot(np.arange(0,len(signal1)), signal1)
     plt.xlabel('time(s)')
     plt.ylabel('signal(v)')
     plt.show()
@@ -42,12 +42,12 @@ def ButterBbandpassFilter(inputSignal,lowCutoff,highCutoff,samplingRate,order):
     filtered = filtfilt(numerator, denominator, inputSignal)
     return filtered
 
-def RemoveDCComponent(signal):
+def RemoveDCComponent(signal1):
     # Calculate median value signal
-    signalMedian = np.median(signal)
+    signalMedian = np.median(signal1)
     
     # Subtract baseline median from signal
-    eog_corrected = signal - signalMedian
+    eog_corrected = signal1 - signalMedian
     return eog_corrected
 
 def Normalization(siganl):
@@ -59,15 +59,15 @@ def Resample(signal1,number):
     resampleSianl = s.resample(signal1, number)
     return resampleSianl
 
-def GetFMax(signal):
+def GetFMax(signal1):
     # Calculate the Fourier transform of the signal
-    fft = np.fft.fft(signal)
+    fft = np.fft.fft(signal1)
     
     # Calculate the power spectral density (PSD) of the signal
     psd = np.abs(fft)**2 / len(fft)
     
     # Calculate the corresponding frequency values for each PSD value
-    freqs = np.fft.fftfreq(len(signal), 1/1000) # 1000 Hz sampling rate
+    freqs = np.fft.fftfreq(len(signal1), 1/1000) # 1000 Hz sampling rate
     
     # Find the index of the maximum PSD value in the frequency range of interest
     freq_range = np.where((freqs >= 0.1) & (freqs <= 30))[0] # frequency range of interest
@@ -84,7 +84,7 @@ def PreprocessingEOGSignal(signal):
     filterSignal = ButterBbandpassFilter(signal, lowCutoff=.5, highCutoff=20, samplingRate=176, order=2)
     # DrawSignal(filterSignal)
     # print(filterSignal,len(filterSignal))
-    # filterSignal = Resample(filterSignal, len(signal) //2)
+    filterSignal = Resample(filterSignal, len(signal) //2)
     # DrawSignal(filterSignal)
     # print(filterSignal,len(filterSignal))
     filterSignal = Normalization(filterSignal)
@@ -141,6 +141,7 @@ def FeatureExtracionByAutoReg(signal):
 def FeatureExtracionByArea(signal):
     i1 = integrate.simpson(signal)
     return i1
+
 
 
 

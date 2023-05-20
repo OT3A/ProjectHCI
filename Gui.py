@@ -9,39 +9,6 @@ import wave
 
 model = load('./modelKNN100.0Peaks.knn')
 
-class Player:
-    CHUNK = 1024
-
-    def __init__(self, filename):
-        self.filename = filename
-
-    def play(self):
-        self.audio = pyaudio.PyAudio()
-
-        self.file = wave.open(self.filename, 'rb')
-
-        self.stream = self.audio.open(format=self.audio.get_format_from_width(self.file.getsampwidth()),
-
-                                      channels=self.file.getnchannels(),
-
-                                      rate=self.file.getframerate(),
-
-                                      output=True)
-
-        data = self.file.readframes(self.CHUNK)
-
-        while data:
-            self.stream.write(data)
-
-            data = self.file.readframes(self.CHUNK)
-
-        self.stream.stop_stream()
-
-        self.stream.close()
-
-        self.file.close()
-
-        self.audio.terminate()
 
 def button_entered(event):
     # Change the background color of the button to red when the mouse enters
@@ -56,7 +23,7 @@ down = False
 left = False
 right = False
 blink = False
-golbal = ''
+globalpre =''
 def select_file():
     pathSignalH = filedialog.askopenfilename()
     pathSignalV = filedialog.askopenfilename()
@@ -73,7 +40,6 @@ def select_file():
         
     elif prediction == 1:
         print('Blink')
-        blink = True 
     elif prediction == 2:
         print('Right')
         
@@ -85,17 +51,81 @@ def select_file():
         
     print("predict",prediction)
     update_canvas(prediction)
+    update_button_color(prediction)
 
     
+print(globalpre)
 
 
-player = Player('hun.wav')
-player2 = Player('output3.wav')
-player3 = Player('sleep.wav')
-player4 = Player('output5.wav')
+
+
+
+sleep = False
+eat = False
+drink = False
+bathroom = False
+
+
+def update_button_color(prediction):
+    global sleep , eat,drink,bathroom
+    if(prediction==4):
+        bathroomButton.config(bg='SystemButtonFace')
+        sleepButton.config(bg='SystemButtonFace')
+        drinkButton.config(bg='SystemButtonFace')
+        eatButton.config(bg="red")
+        sleep = False
+        eat = True
+        drink = False
+        bathroom = False
+    elif(prediction==2):
+        eatButton.config(bg='SystemButtonFace')
+        sleepButton.config(bg='SystemButtonFace')
+        drinkButton.config(bg='SystemButtonFace')
+        bathroomButton.config(bg='red')
+        sleep = False
+        eat = False
+        drink = False
+        bathroom = True
+    elif(prediction==0):
+        eatButton.config(bg='SystemButtonFace')
+        sleepButton.config(bg='SystemButtonFace')
+        bathroomButton.config(bg='SystemButtonFace')
+        drinkButton.config(bg='red')
+        sleep = False
+        eat = False
+        drink = True
+        bathroom = False
+    elif(prediction==3):
+        eatButton.config(bg='SystemButtonFace')
+        bathroomButton.config(bg='SystemButtonFace')
+        drinkButton.config(bg='SystemButtonFace')    
+        sleepButton.config(bg='red')
+        sleep = True
+        eat = False
+        drink = False
+        bathroom = False
+    elif prediction == 1:
+        playSound()
+        
+
+def playSound():
+    if (sleep==False and eat==False and drink==False and bathroom==True):
+        sound.play()
+    elif (sleep==False and eat==False and drink==True and bathroom==False):
+        sound.play()
+    elif (sleep==False and eat==True and drink==False and bathroom==False):
+        sound.play()
+    elif (sleep==True and eat==False and drink==False and bathroom==False):
+        sound.play()
+
+
+
+
 
 # set up Pygame
 pygame.init()
+
+sound = pygame.mixer.Sound('soud.mp3')
 
 
 # set the dimensions of the screen
@@ -125,6 +155,30 @@ blink_duration = 20
 # set the state of the eyes (center or moved)
 moved_timer = 0
 moved_duration = 200
+
+
+
+def update_button_color(prediction):
+    if(prediction==4):
+        bathroomButton.config(bg='SystemButtonFace')
+        sleepButton.config(bg='SystemButtonFace')
+        drinkButton.config(bg='SystemButtonFace')
+        eatButton.config(bg="red")
+    elif(prediction==2):
+        eatButton.config(bg='SystemButtonFace')
+        sleepButton.config(bg='SystemButtonFace')
+        drinkButton.config(bg='SystemButtonFace')
+        bathroomButton.config(bg='red')
+    elif(prediction==0):
+        eatButton.config(bg='SystemButtonFace')
+        sleepButton.config(bg='SystemButtonFace')
+        bathroomButton.config(bg='SystemButtonFace')
+        drinkButton.config(bg='red')
+    elif(prediction==3):
+        eatButton.config(bg='SystemButtonFace')
+        bathroomButton.config(bg='SystemButtonFace')
+        drinkButton.config(bg='SystemButtonFace')    
+        sleepButton.config(bg='red')
 
 
 
@@ -160,6 +214,9 @@ def move_pupils(predictMove):
             left_eye_open = False
             right_eye_open = False
 
+
+    
+
 # define a function to get the new position of a pupil based on the eye position and angle
 def get_new_pos(eye_pos, angle, max_distance):
     distance = min(max_distance, max(0, max_distance - pygame.mouse.get_pos()[1]/10))
@@ -182,26 +239,26 @@ canvas = tk.Canvas(root, width=900, height=600)
 canvas.create_image(0, 0, anchor='nw', image=backImage)
 canvas.pack()
 # Create buttons with the image and place the button into the root window
-eatButton = tk.Button(root, image=image,width=150,height=150,command=player.play)
+eatButton = tk.Button(root, image=image,width=150,height=150)
 eatButton.place(relx=0.5,rely=0.17,anchor='center')
-eatButton.bind('<Enter>', button_entered)
-eatButton.bind('<Leave>', button_left)
+# eatButton.bind('<Enter>', button_entered)
+# eatButton.bind('<Leave>', button_left)
 
-drinkButton = tk.Button(root, image=drinkImage,width=150,height=150,command=player2.play)
+drinkButton = tk.Button(root, image=drinkImage,width=150,height=150,)
 drinkButton.place(relx=0.5,rely=0.83,anchor='center')
-drinkButton.bind('<Enter>', button_entered)
-drinkButton.bind('<Leave>', button_left)
+# drinkButton.bind('<Enter>', button_entered)
+# drinkButton.bind('<Leave>', button_left)
 
-sleepButton = tk.Button(root, image=sleepImage,width=150,height=150,command=player3.play)
+sleepButton = tk.Button(root, image=sleepImage,width=150,height=150,)
 sleepButton.place(relx=0.1,rely=0.5,anchor='center')
-sleepButton.bind('<Enter>', button_entered)
-sleepButton.bind('<Leave>', button_left)
+# sleepButton.bind('<Enter>', button_entered)
+# sleepButton.bind('<Leave>', button_left)
 
 
-bathroomButton = tk.Button(root, image=bathroomImage,width=150,height=150,command=player4.play)
+bathroomButton = tk.Button(root, image=bathroomImage,width=150,height=150,)
 bathroomButton.place(relx=0.9,rely=0.5,anchor='center')
-bathroomButton.bind('<Enter>', button_entered)
-bathroomButton.bind('<Leave>', button_left)
+# bathroomButton.bind('<Enter>', button_entered)
+# bathroomButton.bind('<Leave>', button_left)
 
 loadSignalButton = tk.Button(root,text="Load Signal",command = select_file)
 loadSignalButton.place(relx=0.1,rely=0.9,anchor='center')
@@ -210,7 +267,7 @@ loadSignalButton.place(relx=0.1,rely=0.9,anchor='center')
 # define a function to update the canvas with the current state of the eyes
 def update_canvas(predictMove):
     global blink_timer, left_eye_open, right_eye_open, left_pupil_pos, right_pupil_pos, moved_timer
-    
+    print(globalpre)
     # move the pupils based on keyboard input and blink when space bar is pressed
     move_pupils(predictMove)
 
