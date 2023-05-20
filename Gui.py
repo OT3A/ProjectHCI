@@ -4,8 +4,7 @@ import math
 from tkinter import filedialog
 from EOGProject import PreprocessingEOGSignal,ReadSignal,FeatureExtracionByPeaks
 from joblib import load
-import pyaudio
-import wave
+
 
 model = load('./modelKNN100.0Peaks.knn')
 
@@ -55,9 +54,6 @@ def select_file():
 
     
 print(globalpre)
-
-
-
 
 
 sleep = False
@@ -110,32 +106,25 @@ def update_button_color(prediction):
         eat = False
         drink = False
         bathroom = False
-        
-        
+              
 
 def playSound():
     if (sleep==False and eat==False and drink==False and bathroom==True):
-        sound.play()
+        ToiletSound.play()
     elif (sleep==False and eat==False and drink==True and bathroom==False):
-        sound.play()
+        DrinkSound.play()
     elif (sleep==False and eat==True and drink==False and bathroom==False):
-        sound.play()
+        EatSound.play()
     elif (sleep==True and eat==False and drink==False and bathroom==False):
-        sound.play()
-
-
-
-
+        SleepSound.play()
 
 # set up Pygame
 pygame.init()
 
-sound = pygame.mixer.Sound('soud.mp3')
-
-
-# set the dimensions of the screen
-size = width, height = 150, 50
-screen = pygame.display.set_mode(size)
+SleepSound = pygame.mixer.Sound('Sleep.mp3')
+ToiletSound = pygame.mixer.Sound('toilet.mp3')
+DrinkSound = pygame.mixer.Sound('Drink.mp3')
+EatSound = pygame.mixer.Sound('Hungry.mp3')
 
 # set the colors for the eyes and pupils
 eye_color = (255, 255, 255)
@@ -157,48 +146,38 @@ right_eye_open = True
 blink_timer = 0
 blink_duration = 20
 
-# set the state of the eyes (center or moved)
-moved_timer = 0
-moved_duration = 200
-
-
-
-
 
 # define a function to move the pupils based on keyboard input
 def move_pupils(predictMove):
-    global left_pupil_pos, right_pupil_pos, moved_timer
-    keys = pygame.key.get_pressed()
+    global left_pupil_pos, right_pupil_pos, left_eye_open, right_eye_open
     # move pupils based on arrow keys
-    if predictMove == 4:
+    if predictMove == 4: #up
         left_pupil_pos = get_new_pos(left_eye_pos, math.pi/2, eye_radius - pupil_radius)
         right_pupil_pos = get_new_pos(right_eye_pos, math.pi/2, eye_radius - pupil_radius)
-        moved_timer = moved_duration
-    elif predictMove == 0:
+        left_eye_open = True
+        right_eye_open = True
+    elif predictMove == 0: #down
         left_pupil_pos = get_new_pos(left_eye_pos, -math.pi/2, eye_radius - pupil_radius)
         right_pupil_pos = get_new_pos(right_eye_pos, -math.pi/2, eye_radius - pupil_radius)
-        moved_timer = moved_duration
-    elif predictMove == 3:
+        left_eye_open = True
+        right_eye_open = True
+    elif predictMove == 3: #right
         left_pupil_pos = get_new_pos(left_eye_pos, math.pi, eye_radius - pupil_radius)
         right_pupil_pos = get_new_pos(right_eye_pos, math.pi, eye_radius - pupil_radius)
-        moved_timer = moved_duration
-    elif predictMove == 2:
+        left_eye_open = True
+        right_eye_open = True
+    elif predictMove == 2: #left
         left_pupil_pos = get_new_pos(left_eye_pos, 0, eye_radius - pupil_radius)
         right_pupil_pos = get_new_pos(right_eye_pos, 0, eye_radius - pupil_radius)
-        moved_timer = moved_duration
+        left_eye_open = True
+        right_eye_open = True
     # blink when space bar is pressedx
-    if predictMove == 1:
-        global blink_timer, left_eye_open, right_eye_open
+    if predictMove == 1: #blink
         left_pupil_pos = get_new_pos(left_eye_pos, 0, 1000)
         right_pupil_pos = get_new_pos(right_eye_pos, 0, 1000)
-        moved_timer = moved_duration
-        if blink_timer == 0:
-            blink_timer = blink_duration
-            left_eye_open = False
-            right_eye_open = False
+        left_eye_open = False
+        right_eye_open = False
 
-
-    
 
 # define a function to get the new position of a pupil based on the eye position and angle
 def get_new_pos(eye_pos, angle, max_distance):
@@ -249,24 +228,10 @@ loadSignalButton.place(relx=0.1,rely=0.9,anchor='center')
 
 # define a function to update the canvas with the current state of the eyes
 def update_canvas(predictMove):
-    global blink_timer, left_eye_open, right_eye_open, left_pupil_pos, right_pupil_pos, moved_timer
+    global left_eye_open, right_eye_open, left_pupil_pos, right_pupil_pos
     print(globalpre)
     # move the pupils based on keyboard input and blink when space bar is pressed
     move_pupils(predictMove)
-
-    # decrement blink timer and update eye state
-    if blink_timer > 0:
-        blink_timer -= 1
-        if blink_timer == 0:
-            left_eye_open = True
-            right_eye_open = True
-
-    # decrement moved timer and return eyes to center if necessary
-    if moved_timer > 0:
-        moved_timer -= 1
-        if moved_timer == 0:
-            left_pupil_pos = left_eye_pos
-            right_pupil_pos = right_eye_pos
 
     # convert eye_color and pupil_color to hexadecimal strings
     eye_color_hex = '#%02x%02x%02x' % eye_color

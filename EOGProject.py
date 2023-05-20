@@ -16,10 +16,9 @@ from joblib import dump
 from sklearn.ensemble import RandomForestClassifier
 warnings.filterwarnings('ignore')
 
-
-
 from statsmodels.tsa.ar_model import AutoReg
 def ReadSignal(path):
+    
     EOG_Signal = open(path,"r")
     lines = EOG_Signal.readlines()
     AMP=[]
@@ -34,6 +33,7 @@ def DrawSignal(signal1):
     plt.ylabel('signal(v)')
     plt.show()
     # EOG_Signal = open("dataset/asagi1v.txt","r")
+    
 def ButterBbandpassFilter(inputSignal,lowCutoff,highCutoff,samplingRate,order):
     nyq = .5 * samplingRate
     low = lowCutoff / nyq
@@ -95,7 +95,6 @@ def PreprocessingEOGSignal(signal):
     # print(filterSignal,len(filterSignal))
     return filterSignal
 
-
 #Frequency Domain Feature
 
 def FeatureExtracionByWavelets(signal):
@@ -142,10 +141,8 @@ def FeatureExtracionByArea(signal):
     i1 = integrate.simpson(signal)
     return i1
 
-
-
-
 def FeatureExtracion(siganls, method):
+    
     Feature = []
     if method == 1:
         for signal in siganls:
@@ -171,7 +168,7 @@ def main():
     feature_H =[]
     feature_V =[]
     
-    files = os.listdir("D:/PDF/4th year/seconde term/HCI/ProjectHCI/dataset")
+    files = os.listdir("./dataset")
     # print(files)
     for file in files:
         if 'h' in file:
@@ -226,8 +223,8 @@ def main():
                 signals_H.append(signal)
                 labels_H.append(label)
     # print(signals_H,len(signals_H))
-    feature_H = FeatureExtracion(signals_H, 5)
-    feature_V = FeatureExtracion(signals_V, 5)
+    feature_H = FeatureExtracion(signals_H, 4)
+    feature_V = FeatureExtracion(signals_V, 4)
     data_H =pd.DataFrame(feature_H)
     
     data_V =pd.DataFrame(feature_V)
