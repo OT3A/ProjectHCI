@@ -105,7 +105,12 @@ def update_button_color(prediction):
         drink = False
         bathroom = False
     elif prediction == 1:
-        playSound()
+        playSound()  
+        sleep = False
+        eat = False
+        drink = False
+        bathroom = False
+        
         
 
 def playSound():
@@ -158,28 +163,6 @@ moved_duration = 200
 
 
 
-def update_button_color(prediction):
-    if(prediction==4):
-        bathroomButton.config(bg='SystemButtonFace')
-        sleepButton.config(bg='SystemButtonFace')
-        drinkButton.config(bg='SystemButtonFace')
-        eatButton.config(bg="red")
-    elif(prediction==2):
-        eatButton.config(bg='SystemButtonFace')
-        sleepButton.config(bg='SystemButtonFace')
-        drinkButton.config(bg='SystemButtonFace')
-        bathroomButton.config(bg='red')
-    elif(prediction==0):
-        eatButton.config(bg='SystemButtonFace')
-        sleepButton.config(bg='SystemButtonFace')
-        bathroomButton.config(bg='SystemButtonFace')
-        drinkButton.config(bg='red')
-    elif(prediction==3):
-        eatButton.config(bg='SystemButtonFace')
-        bathroomButton.config(bg='SystemButtonFace')
-        drinkButton.config(bg='SystemButtonFace')    
-        sleepButton.config(bg='red')
-
 
 
 # define a function to move the pupils based on keyboard input
@@ -203,7 +186,7 @@ def move_pupils(predictMove):
         left_pupil_pos = get_new_pos(left_eye_pos, 0, eye_radius - pupil_radius)
         right_pupil_pos = get_new_pos(right_eye_pos, 0, eye_radius - pupil_radius)
         moved_timer = moved_duration
-    # blink when space bar is pressed
+    # blink when space bar is pressedx
     if predictMove == 1:
         global blink_timer, left_eye_open, right_eye_open
         left_pupil_pos = get_new_pos(left_eye_pos, 0, 1000)
