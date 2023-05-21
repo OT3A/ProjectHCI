@@ -19,6 +19,7 @@ warnings.filterwarnings('ignore')
 from statsmodels.tsa.ar_model import AutoReg
 def ReadSignal(path):
     
+    
     EOG_Signal = open(path,"r")
     lines = EOG_Signal.readlines()
     AMP=[]
@@ -26,7 +27,7 @@ def ReadSignal(path):
         L=lines[i+1]
         AMP.append(int(L))
     return AMP
-def DrawSignal(signal1):
+def DrawSignal(signal1):    
     plt.Figure(figsize=(12,6))
     plt.plot(np.arange(0,len(signal1)), signal1)
     plt.xlabel('time(s)')
@@ -96,7 +97,6 @@ def PreprocessingEOGSignal(signal):
     return filterSignal
 
 #Frequency Domain Feature
-
 def FeatureExtracionByWavelets(signal):
     # Perform wavelet decomposition on the signal
     coeffs = pywt.wavedec(signal, 'db4')
@@ -112,7 +112,7 @@ def FeatureExtracionByWavelets(signal):
 
 def FeatureExtracionByPSD(signal):
     fs =2* GetFMax(signal)
-    (f,psd)= s.periodogram(signal,fs,scaling='density')
+    (f,psd)= s.periodogram(signal,fs,scaling='density') #f is frequency Componant
     psd_mean = np.mean(psd)
     psd_std = np.std(psd)
     psd_max = np.max(psd)
@@ -223,6 +223,7 @@ def main():
                 signals_H.append(signal)
                 labels_H.append(label)
     # print(signals_H,len(signals_H))
+    
     feature_H = FeatureExtracion(signals_H, 4)
     feature_V = FeatureExtracion(signals_V, 4)
     data_H =pd.DataFrame(feature_H)

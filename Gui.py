@@ -23,6 +23,7 @@ left = False
 right = False
 blink = False
 globalpre =''
+
 def select_file():
     pathSignalH = filedialog.askopenfilename()
     pathSignalV = filedialog.askopenfilename()
@@ -36,15 +37,12 @@ def select_file():
     prediction = model.predict([signal])
     if prediction == 0:
         print('Down')
-        
     elif prediction == 1:
         print('Blink')
     elif prediction == 2:
         print('Right')
-        
     elif prediction == 3:
         print('Left')
-        
     elif prediction == 4:
         print('Up')
         
@@ -200,6 +198,7 @@ backImage = tk.PhotoImage(file='signal11.jpg')
 canvas = tk.Canvas(root, width=900, height=600)
 canvas.create_image(0, 0, anchor='nw', image=backImage)
 canvas.pack()
+
 # Create buttons with the image and place the button into the root window
 eatButton = tk.Button(root, image=image,width=150,height=150)
 eatButton.place(relx=0.5,rely=0.17,anchor='center')
