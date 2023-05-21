@@ -35,11 +35,17 @@ Preprocessing:
 4)	Normalization Signals Manual Using Z-Score.
 5)	Remove DC Component in Signal by Subtract Signal Median.
 6)	Label Encoder for Classes:
+
 o	Yukari --> Up --> 4.
+
 o	Asagi --> Down --> 0.
+
 o	Sag --> Right --> 2.
+
 o	Sol --> Left --> 3.
+
 o	Kirp --> Blink --> 1.
+
 
 2- Feature extraction methods: 
 We Use 5 Ways to Feature Extraction:
@@ -65,24 +71,36 @@ b.	Area under curve Features: it’s meant the integration of the function of cu
 1)	KNN:
 #	Feature extraction	Accuracy
 1	Compute Statistical features from wavelet coefficients	45 ~ 70 %
+
 2	Power Spectral Density (PSD)	20 ~ 35 %
+
 3	Compute Morphological features from filtered signals Using Max peak values	75 ~ 100 %
+
 4	Compute Morphological features from filtered signals Using Area under curve	30 ~ 65 %
+
 5	Auto Regression Coefficients	50 ~ 75 %
 
 2)	Support Vector Machine:
 #	Feature extraction	Accuracy
 1	Compute Statistical features from wavelet coefficients	50 ~ 80 %
+
 2	Power Spectral Density (PSD)	30 ~ 55 %
+
 3	Compute Morphological features from filtered signals Using Max peak values	70 ~ 100 %
+
 4	Compute Morphological features from filtered signals Using Area under curve	40 ~ 70 %
+
 5	Auto Regression Coefficients	45 ~ 80 %
 
 3)	Random Forests:
 #	Feature extraction	Accuracy
+
 1	Compute Statistical features from wavelet coefficients 	80 ~ 100 %
+
 2	Power Spectral Density (PSD)	20 ~ 45 %
+
 3	Compute Morphological features from filtered signals Using Max peak values	70 ~ 100 %
+
 4	Compute Morphological features from filtered signals Using Area under curve	30 ~ 65 %
 5	Auto Regression Coefficients	80 ~ 95 %
 
