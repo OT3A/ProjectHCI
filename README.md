@@ -1,4 +1,4 @@
-# ProjectHCI
+# HCI Project
 # EOG based interface :
 
 Idea of Project:
@@ -7,10 +7,15 @@ If we have an EOG signal, it is a signal of eye movements up, down, right, left,
 Dataset
 •	We have 278 files. 
 •	we have 5 Classes:
+
 o	Yukari --> Up
+
 o	Asagi --> Down
+
 o	Sag --> Right 
+
 o	Sol --> Left
+
 o	Kirp --> Blink
 
 •	We Use 100 File After Preprocessing.
